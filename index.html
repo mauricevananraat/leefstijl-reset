@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Leefstijl Reset</title>
+  <link rel="stylesheet" href="src/styles.css" />
+</head>
+<body>
+  <main id="app">
+    <section id="screen-vandaag" class="screen">
+      <header class="day-header"><h1 id="day-title">Vandaag</h1><p id="day-date"></p></header>
+      <button id="variant-btn" class="big-btn">Rustige dag</button>
+      <ul id="meal-list" class="checklist"></ul>
+      <div class="trackers">
+        <div class="tracker" id="tracker-droog"></div>
+        <div class="tracker" id="tracker-sleep"></div>
+        <div class="tracker" id="tracker-stress"></div>
+      </div>
+      <section class="basisregels"><h2>Basisregels</h2><ul id="rules-list"></ul></section>
+    </section>
+
+    <section id="screen-overzicht" class="screen hidden">
+      <h1>Overzicht</h1>
+      <div id="summary-tiles" class="tiles"></div>
+    </section>
+
+    <section id="screen-instellingen" class="screen hidden">
+      <h1>Instellingen</h1>
+      <label>Startdatum <input type="date" id="start-date" /></label>
+      <label>Gewicht start (kg) <input type="number" step="0.1" id="weight-start" /></label>
+      <label>Gewicht eind (kg) <input type="number" step="0.1" id="weight-end" /></label>
+      <button id="reset-btn" class="danger-btn">Logboek resetten</button>
+      <p class="disclaimer">Dit is geen medisch advies. Voel je je futloos of duizelig op een werkdag? Neem dan een echte maaltijd in plaats van een shake.</p>
+    </section>
+  </main>
+
+  <nav id="tabbar">
+    <button data-screen="vandaag" class="active">Vandaag</button>
+    <button data-screen="overzicht">Overzicht</button>
+    <button data-screen="instellingen">Meer</button>
+  </nav>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
