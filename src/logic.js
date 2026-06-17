@@ -23,3 +23,23 @@ export function computeProgress(startISO, todayISO) {
     afterPlan: dayNumber > 14,
   };
 }
+
+export function isWeekday(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay(); // 0=zo..6=za
+  return dow >= 1 && dow <= 5;
+}
+
+export function defaultDroog(iso) {
+  return isWeekday(iso);
+}
+
+export function emptyDayLog(iso) {
+  return {
+    variant: "rustig",
+    meals: { ontbijt: false, lunch: false, avond: false },
+    droog: defaultDroog(iso),
+    sleep: null,
+    stress: null,
+  };
+}
