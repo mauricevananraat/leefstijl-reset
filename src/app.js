@@ -1,5 +1,5 @@
 // src/app.js
-import { computeProgress } from "./logic.js";
+import { computeProgress, summarize, weightDelta } from "./logic.js";
 import { loadState, saveState, getDayLog, resetState } from "./storage.js";
 import { getMeals, BASISREGELS } from "./content.js";
 
@@ -69,7 +69,23 @@ function renderVandaag() {
   }
 }
 
-function renderOverzicht() { /* ingevuld in Task 10 */ }
+function renderOverzicht() {
+  const s = summarize(state.days);
+  const wd = weightDelta(state.weightStart, state.weightEnd);
+  const pct = s.totalMeals ? Math.round((s.completedMeals / s.totalMeals) * 100) : 0;
+  const tiles = [
+    { num: s.dryDays, label: "droge dagen" },
+    { num: s.avgSleep ?? "–", label: "gem. slaap (u)" },
+    { num: `${s.completedMeals}/${s.totalMeals}`, label: "maaltijden", bar: pct },
+    { num: `${s.stress.laag}/${s.stress.mid}/${s.stress.hoog}`, label: "stress L/M/H" },
+    { num: wd === null ? "–" : `${wd > 0 ? "+" : ""}${wd}`, label: "gewicht (kg)" },
+  ];
+  document.getElementById("summary-tiles").innerHTML = tiles.map((t) =>
+    `<div class="tile"><div class="num">${t.num}</div><div>${t.label}</div>${
+      t.bar !== undefined ? `<div class="bar"><span style="width:${t.bar}%"></span></div>` : ""
+    }</div>`
+  ).join("");
+}
 
 for (const b of document.querySelectorAll("#tabbar button")) b.onclick = () => show(b.dataset.screen);
 renderVandaag();
