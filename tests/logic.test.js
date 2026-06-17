@@ -2,6 +2,7 @@
 import { describe, it, expect } from "vitest";
 import { daysBetween, computeProgress } from "../src/logic.js";
 import { isWeekday, defaultDroog, emptyDayLog } from "../src/logic.js";
+import { summarize, weightDelta } from "../src/logic.js";
 
 describe("daysBetween", () => {
   it("is 0 op dezelfde dag", () => {
@@ -68,5 +69,39 @@ describe("emptyDayLog", () => {
       sleep: null,
       stress: null,
     });
+  });
+});
+
+describe("summarize", () => {
+  const days = {
+    "2026-06-17": { variant: "zwaar", meals: { ontbijt: true, lunch: true, avond: false }, droog: true, sleep: 7, stress: "mid" },
+    "2026-06-18": { variant: "rustig", meals: { ontbijt: true, lunch: false, avond: false }, droog: false, sleep: 6, stress: "hoog" },
+  };
+  it("telt droge dagen", () => {
+    expect(summarize(days).dryDays).toBe(1);
+  });
+  it("middelt slaap over gelogde dagen", () => {
+    expect(summarize(days).avgSleep).toBe(6.5);
+  });
+  it("telt voltooide en totale maaltijden", () => {
+    const s = summarize(days);
+    expect(s.completedMeals).toBe(3);
+    expect(s.totalMeals).toBe(6);
+  });
+  it("telt stress per niveau", () => {
+    expect(summarize(days).stress).toEqual({ laag: 0, mid: 1, hoog: 1 });
+  });
+  it("geeft avgSleep null bij geen slaapdata", () => {
+    const empty = { "2026-06-17": { meals: {}, sleep: null, stress: null, droog: false } };
+    expect(summarize(empty).avgSleep).toBe(null);
+  });
+});
+
+describe("weightDelta", () => {
+  it("rekent verschil eind minus start", () => {
+    expect(weightDelta(92, 90.5)).toBe(-1.5);
+  });
+  it("is null als een waarde ontbreekt", () => {
+    expect(weightDelta(92, null)).toBe(null);
   });
 });

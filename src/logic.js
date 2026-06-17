@@ -43,3 +43,29 @@ export function emptyDayLog(iso) {
     stress: null,
   };
 }
+
+export function summarize(daysObj) {
+  const logs = Object.values(daysObj || {});
+  let dryDays = 0, completedMeals = 0, totalMeals = 0;
+  const sleeps = [];
+  const stress = { laag: 0, mid: 0, hoog: 0 };
+  for (const log of logs) {
+    if (log.droog) dryDays++;
+    const meals = log.meals || {};
+    for (const key of ["ontbijt", "lunch", "avond"]) {
+      totalMeals++;
+      if (meals[key]) completedMeals++;
+    }
+    if (typeof log.sleep === "number") sleeps.push(log.sleep);
+    if (log.stress && stress[log.stress] !== undefined) stress[log.stress]++;
+  }
+  const avgSleep = sleeps.length
+    ? Math.round((sleeps.reduce((a, b) => a + b, 0) / sleeps.length) * 10) / 10
+    : null;
+  return { dryDays, avgSleep, completedMeals, totalMeals, stress };
+}
+
+export function weightDelta(start, end) {
+  if (typeof start !== "number" || typeof end !== "number") return null;
+  return Math.round((end - start) * 10) / 10;
+}
