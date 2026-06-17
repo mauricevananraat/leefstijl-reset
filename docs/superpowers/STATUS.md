@@ -5,8 +5,15 @@
 ## Waar we staan
 - Brainstorm + ontwerp: **klaar en goedgekeurd** → `docs/superpowers/specs/2026-06-17-leefstijl-reset-design.md`
 - Implementatieplan: **klaar, zelf-gereviewd** → `docs/superpowers/plans/2026-06-17-leefstijl-reset.md`
-- Git: geïnitialiseerd, eerste commit gemaakt.
-- Nog **geen** code gebouwd.
+- **Alle 12 taken gebouwd** (subagent-gedreven, TDD op de logica), per-taak + brede eind-review gedaan, alle bevindingen gefixt. **27 tests groen.**
+- Branch `feature/leefstijl-reset` gemerged naar `master`.
+- **Live gehost via GitHub Pages:** https://mauricevananraat.github.io/leefstijl-reset/
+  (publieke repo `mauricevananraat/leefstijl-reset`; site-branch `gh-pages` = gebouwde `dist/`).
+
+## Nog open (Maurice)
+- Telefoontest doorlopen → `reports/telefoontest-2026-06-17.md`.
+- Content bevestigen: werktitel, variant in week 2, concrete dagmenu's (nu concept in `src/content.js`).
+- Optioneel later: eigen app-icoon (`manifest.webmanifest` → `icons` is nu leeg).
 
 ## Besluiten (kern)
 - Levering: één los `index.html`, gehost als statische site, op het beginscherm.
