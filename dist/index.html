@@ -2,90 +2,424 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
   <title>Leefstijl Reset</title>
   <meta name="theme-color" content="#2563eb" />
   <link rel="manifest" href="manifest.webmanifest" />
   <style>
+/* Leefstijl Reset — mobiele web-app styling */
 :root {
-  --bg: #f6f7f9; --card: #ffffff; --ink: #1f2933; --muted: #525e6b;
-  --accent: #2563eb; --ok: #16a34a; --danger: #dc2626; --tap: 56px;
+  --bg: #eef1f6;
+  --card: #ffffff;
+  --ink: #1b232f;
+  --muted: #5b6675;
+  --faint: #8a93a3;
+  --line: #e6e9ef;
+  --brand: #2563eb;
+  --brand-600: #1d4ed8;
+  --brand-50: #eef4ff;
+  --green: #15803d;
+  --green-50: #f0fdf4;
+  --amber: #b45309;
+  --red: #b91c1c;
+  --red-50: #fef2f2;
+  --tap: 56px;
+  --radius: 16px;
+  --radius-sm: 12px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 2px 6px rgba(16, 24, 40, .06);
 }
+
 * { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
 body {
-  margin: 0; font-family: system-ui, sans-serif; color: var(--ink);
-  background: var(--bg); padding-bottom: 72px; font-size: 17px;
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  font-size: 17px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-bottom: calc(76px + env(safe-area-inset-bottom));
 }
-.screen { padding: 16px; }
+
+#app { max-width: 480px; margin: 0 auto; }
+
+.screen {
+  padding: 16px 16px 8px;
+  padding-top: calc(16px + env(safe-area-inset-top));
+}
 .hidden { display: none; }
-.day-header h1 { margin: 0; font-size: 22px; }
-.day-header p { margin: 2px 0 16px; color: var(--muted); }
-.big-btn {
-  width: 100%; min-height: var(--tap); font-size: 18px; border: none;
-  border-radius: 14px; background: var(--accent); color: #fff; margin-bottom: 16px;
+
+button { font-family: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:active { transform: scale(.97); }
+.no-select { user-select: none; }
+
+/* ---------- Section labels & screen headers ---------- */
+.field { margin-bottom: 18px; }
+.field-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin: 0 4px 8px;
 }
-.checklist { list-style: none; padding: 0; margin: 0 0 16px; }
-.checklist li {
-  min-height: var(--tap); display: flex; align-items: center; gap: 12px;
-  padding: 12px 16px; background: var(--card); border-radius: 14px; margin-bottom: 8px;
+.screen-head { margin: 4px 0 18px; }
+.screen-head h1 { margin: 0; font-size: 26px; font-weight: 800; letter-spacing: -.02em; }
+.screen-sub { margin: 4px 0 0; color: var(--muted); font-size: 15px; }
+
+/* ---------- Hero (Vandaag) ---------- */
+.hero {
+  background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+  color: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, .28);
 }
-.checklist li.done { background: #e7f6ec; }
-.trackers { display: grid; gap: 8px; margin-bottom: 16px; }
-.tracker { background: var(--card); border-radius: 14px; padding: 12px 16px; }
-.tracker .seg-btn { min-height: 44px; min-width: 64px; border-radius: 10px; border: 1px solid #d1d5db; background: #fff; }
-.tracker .seg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-.basisregels { background: var(--card); border-radius: 14px; padding: 12px 16px; }
-.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.tile { background: var(--card); border-radius: 14px; padding: 14px; }
-.tile .num { font-size: 24px; font-weight: 700; }
-.tile .bar { height: 8px; background: #e5e7eb; border-radius: 4px; margin-top: 8px; }
-.tile .bar > span { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
-label { display: block; margin: 12px 0; }
-input { min-height: var(--tap); width: 100%; font-size: 17px; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 12px; }
-.danger-btn { width: 100%; min-height: var(--tap); border: none; border-radius: 14px; background: var(--danger); color: #fff; margin-top: 16px; }
-.disclaimer { color: var(--muted); font-size: 14px; margin-top: 16px; }
+.hero--plain {
+  background: linear-gradient(135deg, #334155 0%, #475569 100%);
+  box-shadow: 0 8px 22px rgba(51, 65, 85, .24);
+}
+.hero-week {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  background: rgba(255, 255, 255, .18);
+  padding: 5px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.hero-title { margin: 0; font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
+.hero-date { margin: 4px 0 0; color: rgba(255, 255, 255, .92); font-size: 15px; text-transform: capitalize; }
+.hero-progress {
+  height: 8px;
+  background: rgba(255, 255, 255, .22);
+  border-radius: 999px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+.hero-progress-fill {
+  height: 100%;
+  width: 0;
+  background: #fff;
+  border-radius: 999px;
+  transition: width .35s ease;
+}
+.hero-progress-label { margin: 8px 0 0; font-size: 13px; color: rgba(255, 255, 255, .92); font-weight: 600; }
+
+/* ---------- Segmented control ---------- */
+.segmented {
+  display: flex;
+  gap: 4px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 4px;
+  box-shadow: var(--shadow);
+}
+.segmented .seg {
+  flex: 1;
+  min-height: 48px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: background .15s, color .15s;
+}
+.segmented .seg.active { background: var(--brand); color: #fff; }
+.segmented--stress .seg.active.laag { background: var(--green); }
+.segmented--stress .seg.active.mid { background: var(--amber); }
+.segmented--stress .seg.active.hoog { background: var(--red); }
+
+/* ---------- Meal list ---------- */
+.meal-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.meal {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: var(--tap);
+  padding: 14px 16px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: background .15s, border-color .15s;
+}
+.meal.done { background: var(--green-50); border-color: #bbf7d0; }
+.meal-check {
+  flex: 0 0 26px;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 2px solid #cbd2dc;
+  display: grid;
+  place-items: center;
+  transition: background .15s, border-color .15s;
+}
+.meal.done .meal-check { background: var(--green); border-color: var(--green); }
+.meal-check svg { width: 15px; height: 15px; opacity: 0; transition: opacity .15s; }
+.meal.done .meal-check svg { opacity: 1; }
+.meal-text { display: flex; flex-direction: column; gap: 2px; }
+.meal-name { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--faint); }
+.meal-desc { font-size: 16px; color: var(--ink); }
+
+/* ---------- Trackers ---------- */
+.trackers { display: grid; gap: 10px; }
+.tracker {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+}
+.tracker-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.tracker-col { display: flex; flex-direction: column; gap: 12px; }
+.tracker-label { font-size: 16px; font-weight: 600; }
+
+/* Switch (droge dag) */
+.switch {
+  position: relative;
+  width: 56px;
+  height: 32px;
+  border-radius: 999px;
+  border: none;
+  background: #cbd2dc;
+  transition: background .18s;
+  flex: 0 0 auto;
+}
+.switch.on { background: var(--brand); }
+.switch-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .25);
+  transition: transform .18s;
+}
+.switch.on .switch-knob { transform: translateX(24px); }
+
+/* Stepper (slaap) */
+.stepper { display: flex; align-items: center; gap: 14px; }
+.step-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--brand-50);
+  color: var(--brand-600);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+.step-val { min-width: 60px; text-align: center; font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ---------- Card / basisregels ---------- */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.basisregels { margin-bottom: 8px; }
+.basisregels h2 { margin: 0 0 10px; font-size: 16px; font-weight: 700; }
+.basisregels ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 9px; }
+.basisregels li {
+  position: relative;
+  padding-left: 26px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.basisregels li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--brand-50);
+  box-shadow: inset 0 0 0 2px var(--brand);
+}
+
+/* ---------- Overzicht tiles ---------- */
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.tile {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.tile.wide { grid-column: 1 / -1; }
+.tile .num { font-size: 30px; font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+.tile .label { margin-top: 6px; font-size: 14px; color: var(--muted); }
+.tile.good .num { color: var(--green); }
+.tile.bad .num { color: var(--red); }
+.tile .bar { height: 8px; background: var(--line); border-radius: 999px; margin-top: 12px; overflow: hidden; }
+.tile .bar > span { display: block; height: 100%; background: var(--brand); border-radius: 999px; transition: width .35s ease; }
+.tile .row { display: flex; align-items: baseline; justify-content: space-between; }
+.tile .row .pct { font-size: 16px; font-weight: 700; color: var(--brand-600); }
+
+/* ---------- Form / instellingen ---------- */
+.form { display: grid; gap: 4px; }
+.field2 { display: block; font-size: 14px; font-weight: 600; color: var(--muted); }
+.field2 input {
+  display: block;
+  width: 100%;
+  min-height: var(--tap);
+  margin-top: 6px;
+  margin-bottom: 8px;
+  font-size: 17px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--ink);
+}
+.field2 input:focus { outline: 2px solid var(--brand); outline-offset: 1px; border-color: var(--brand); }
+.btn-danger {
+  width: 100%;
+  min-height: var(--tap);
+  margin-top: 16px;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  background: var(--red-50);
+  color: var(--red);
+  font-size: 16px;
+  font-weight: 700;
+}
+.disclaimer-card {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.disclaimer-card svg { flex: 0 0 20px; width: 20px; height: 20px; color: var(--amber); margin-top: 1px; }
+.disclaimer-card p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+/* ---------- Bottom tab bar ---------- */
 #tabbar {
-  position: fixed; bottom: 0; left: 0; right: 0; display: flex;
-  background: #fff; border-top: 1px solid #e5e7eb;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  background: rgba(255, 255, 255, .92);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 10;
 }
-#tabbar button { flex: 1; min-height: 64px; border: none; background: none; font-size: 15px; color: var(--muted); }
-#tabbar button.active { color: var(--accent); font-weight: 600; }
+#tabbar button {
+  flex: 1;
+  min-height: 60px;
+  border: none;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+#tabbar button:active { transform: none; }
+#tabbar button svg { width: 24px; height: 24px; }
+#tabbar button.active { color: var(--brand); }
 
 </style>
 </head>
 <body>
   <main id="app">
     <section id="screen-vandaag" class="screen">
-      <header class="day-header"><h1 id="day-title">Vandaag</h1><p id="day-date"></p></header>
-      <button id="variant-btn" class="big-btn">Rustige dag</button>
-      <ul id="meal-list" class="checklist"></ul>
-      <div class="trackers">
-        <div class="tracker" id="tracker-droog"></div>
-        <div class="tracker" id="tracker-sleep"></div>
-        <div class="tracker" id="tracker-stress"></div>
+      <header class="hero" id="day-hero">
+        <span class="hero-week" id="day-week">Week 1</span>
+        <h1 class="hero-title" id="day-title">Vandaag</h1>
+        <p class="hero-date" id="day-date"></p>
+        <div class="hero-progress" id="day-progress-wrap"><div class="hero-progress-fill" id="day-progress"></div></div>
+        <p class="hero-progress-label" id="day-progress-label"></p>
+      </header>
+
+      <div class="field" id="field-variant">
+        <span class="field-label">Type dag</span>
+        <div class="segmented no-select" id="variant-control"></div>
       </div>
-      <section class="basisregels"><h2>Basisregels</h2><ul id="rules-list"></ul></section>
+
+      <div class="field" id="field-meals">
+        <span class="field-label">Maaltijden</span>
+        <ul id="meal-list" class="meal-list"></ul>
+      </div>
+
+      <div class="field" id="field-trackers">
+        <span class="field-label">Bijhouden</span>
+        <div class="trackers">
+          <div class="tracker" id="tracker-droog"></div>
+          <div class="tracker" id="tracker-sleep"></div>
+          <div class="tracker" id="tracker-stress"></div>
+        </div>
+      </div>
+
+      <section class="card basisregels" id="field-rules">
+        <h2>Basisregels</h2>
+        <ul id="rules-list"></ul>
+      </section>
     </section>
 
     <section id="screen-overzicht" class="screen hidden">
-      <h1>Overzicht</h1>
+      <header class="screen-head"><h1>Overzicht</h1><p class="screen-sub">Je cijfers tot nu toe</p></header>
       <div id="summary-tiles" class="tiles"></div>
     </section>
 
     <section id="screen-instellingen" class="screen hidden">
-      <h1>Instellingen</h1>
-      <label>Startdatum <input type="date" id="start-date" /></label>
-      <label>Gewicht start (kg) <input type="number" step="0.1" id="weight-start" /></label>
-      <label>Gewicht eind (kg) <input type="number" step="0.1" id="weight-end" /></label>
-      <button id="reset-btn" class="danger-btn">Logboek resetten</button>
-      <p class="disclaimer">Dit is geen medisch advies. Voel je je futloos of duizelig op een werkdag? Neem dan een echte maaltijd in plaats van een shake.</p>
+      <header class="screen-head"><h1>Instellingen</h1></header>
+      <div class="card form">
+        <label class="field2">Startdatum<input type="date" id="start-date" /></label>
+        <label class="field2">Gewicht start (kg)<input type="number" step="0.1" inputmode="decimal" id="weight-start" /></label>
+        <label class="field2">Gewicht eind (kg)<input type="number" step="0.1" inputmode="decimal" id="weight-end" /></label>
+      </div>
+      <button id="reset-btn" class="btn-danger">Logboek resetten</button>
+      <div class="disclaimer-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p>Dit is geen medisch advies. Voel je je futloos of duizelig op een werkdag? Neem dan een echte maaltijd in plaats van een shake.</p>
+      </div>
     </section>
   </main>
 
   <nav id="tabbar">
-    <button data-screen="vandaag" class="active">Vandaag</button>
-    <button data-screen="overzicht">Overzicht</button>
-    <button data-screen="instellingen">Meer</button>
+    <button data-screen="vandaag" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+      <span>Vandaag</span>
+    </button>
+    <button data-screen="overzicht">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg>
+      <span>Overzicht</span>
+    </button>
+    <button data-screen="instellingen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="8" x2="20" y2="8"/><circle cx="9" cy="8" r="2.5" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.5" fill="#fff"/></svg>
+      <span>Meer</span>
+    </button>
   </nav>
 
   <script>
@@ -210,7 +544,6 @@ function getMeals(week, variant) {
 
 // --- storage.js ---
 // src/storage.js
-
 const KEY = "leefstijl-reset:v1";
 
 function loadState() {
@@ -253,77 +586,116 @@ function getDayLog(state, iso) {
 const state = loadState();
 const todayISO = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD lokaal
 
+const $ = (id) => document.getElementById(id);
+const MEAL_LABEL = { ontbijt: "Ontbijt", lunch: "Lunch", avond: "Avondeten" };
+const STRESS_LABEL = { laag: "Laag", mid: "Gem.", hoog: "Hoog" };
+const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"/></svg>';
+
+function fmtNum(v) {
+  return v == null ? "–" : String(v).replace(".", ",");
+}
+function setDayControls(visible) {
+  for (const id of ["field-variant", "field-meals", "field-trackers", "field-rules"]) {
+    $(id).classList.toggle("hidden", !visible);
+  }
+}
+
 function show(screen) {
   for (const s of document.querySelectorAll(".screen")) s.classList.add("hidden");
-  document.getElementById("screen-" + screen).classList.remove("hidden");
+  $("screen-" + screen).classList.remove("hidden");
   for (const b of document.querySelectorAll("#tabbar button")) b.classList.toggle("active", b.dataset.screen === screen);
   if (screen === "overzicht") renderOverzicht();
 }
 
 function renderVandaag() {
-  const dateEl = document.getElementById("day-date");
-  const titleEl = document.getElementById("day-title");
-  if (!state.startDate) {
-    titleEl.textContent = "Welkom";
-    dateEl.textContent = "Stel je startdatum in bij 'Meer'.";
-    document.getElementById("meal-list").innerHTML = "";
+  const hero = $("day-hero");
+  const weekEl = $("day-week");
+  const titleEl = $("day-title");
+  const dateEl = $("day-date");
+  const progWrap = $("day-progress-wrap");
+  const progFill = $("day-progress");
+  const progLabel = $("day-progress-label");
+
+  // Lege/afgeronde toestanden: gedempte hero, geen dag-bediening.
+  if (!state.startDate || computeProgress(state.startDate, todayISO).afterPlan) {
+    const done = !!state.startDate;
+    hero.classList.add("hero--plain");
+    weekEl.style.display = "none";
+    progWrap.style.display = "none";
+    progLabel.style.display = "none";
+    titleEl.textContent = done ? "Plan afgerond" : "Welkom";
+    dateEl.textContent = done ? "Je 14 dagen zitten erop — bekijk je overzicht." : "Stel je startdatum in bij 'Meer'.";
+    setDayControls(false);
     return;
   }
+
   const p = computeProgress(state.startDate, todayISO);
-  if (p.afterPlan) {
-    titleEl.textContent = "Plan afgerond";
-    dateEl.textContent = "Je 14 dagen zitten erop — bekijk je overzicht.";
-    document.getElementById("meal-list").innerHTML = "";
-    document.getElementById("rules-list").innerHTML = "";
-    document.getElementById("tracker-droog").innerHTML = "";
-    document.getElementById("tracker-sleep").innerHTML = "";
-    document.getElementById("tracker-stress").innerHTML = "";
-    document.getElementById("variant-btn").textContent = "";
-    return;
-  }
-  titleEl.textContent = p.beforeStart ? "Plan start binnenkort" : `Dag ${p.dayNumber} · Week ${p.week}`;
+  const planWeek = p.beforeStart ? 1 : p.week;
+
+  hero.classList.remove("hero--plain");
+  weekEl.style.display = "";
+  weekEl.textContent = `Week ${planWeek}`;
+  titleEl.textContent = p.beforeStart ? "Plan start binnenkort" : `Dag ${p.dayNumber}`;
   dateEl.textContent = new Date(todayISO).toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" });
+  if (p.beforeStart) {
+    progWrap.style.display = "none";
+    progLabel.style.display = "none";
+  } else {
+    progWrap.style.display = "";
+    progLabel.style.display = "";
+    progFill.style.width = Math.round((p.dayNumber / 14) * 100) + "%";
+    progLabel.textContent = `Dag ${p.dayNumber} van 14`;
+  }
+  setDayControls(true);
 
   const log = getDayLog(state, todayISO);
-  const variantBtn = document.getElementById("variant-btn");
-  variantBtn.textContent = log.variant === "zwaar" ? "Zware dag" : "Rustige dag";
-  variantBtn.onclick = () => { log.variant = log.variant === "zwaar" ? "rustig" : "zwaar"; saveState(state); renderVandaag(); };
 
-  const week = p.beforeStart ? 1 : p.week;
-  const meals = getMeals(week, log.variant);
-  const list = document.getElementById("meal-list");
+  // Type dag — segmented control
+  const vc = $("variant-control");
+  vc.innerHTML = "";
+  for (const v of ["rustig", "zwaar"]) {
+    const b = document.createElement("button");
+    b.className = "seg" + (log.variant === v ? " active" : "");
+    b.textContent = v === "zwaar" ? "Zwaar" : "Rustig";
+    b.onclick = () => { log.variant = v; saveState(state); renderVandaag(); };
+    vc.appendChild(b);
+  }
+
+  // Maaltijden — kaarten met vink-cirkel
+  const meals = getMeals(planWeek, log.variant);
+  const list = $("meal-list");
   list.innerHTML = "";
   for (const key of ["ontbijt", "lunch", "avond"]) {
     const li = document.createElement("li");
-    if (log.meals[key]) li.classList.add("done");
-    li.innerHTML = `<span>${log.meals[key] ? "✓" : "○"}</span><div><strong>${key}</strong><br/>${meals[key]}</div>`;
+    li.className = "meal" + (log.meals[key] ? " done" : "");
+    li.innerHTML = `<span class="meal-check">${CHECK_SVG}</span><span class="meal-text"><span class="meal-name">${MEAL_LABEL[key]}</span><span class="meal-desc">${meals[key]}</span></span>`;
     li.onclick = () => { log.meals[key] = !log.meals[key]; saveState(state); renderVandaag(); };
     list.appendChild(li);
   }
 
-  const rules = document.getElementById("rules-list");
-  rules.innerHTML = BASISREGELS.map((r) => `<li>${r}</li>`).join("");
+  // Basisregels
+  $("rules-list").innerHTML = BASISREGELS.map((r) => `<li>${r}</li>`).join("");
 
-  const droog = document.getElementById("tracker-droog");
-  droog.innerHTML = `<strong>Droge dag</strong> `;
-  const droogBtn = document.createElement("button");
-  droogBtn.className = "seg-btn" + (log.droog ? " active" : "");
-  droogBtn.textContent = log.droog ? "Droog ✓" : "Niet droog";
-  droogBtn.onclick = () => { log.droog = !log.droog; saveState(state); renderVandaag(); };
-  droog.appendChild(droogBtn);
+  // Droge dag — switch
+  const droog = $("tracker-droog");
+  droog.innerHTML = `<div class="tracker-row"><span class="tracker-label">Droge dag</span><button class="switch${log.droog ? " on" : ""}" role="switch" aria-checked="${log.droog}" aria-label="Droge dag"><span class="switch-knob"></span></button></div>`;
+  droog.querySelector(".switch").onclick = () => { log.droog = !log.droog; saveState(state); renderVandaag(); };
 
-  const sleep = document.getElementById("tracker-sleep");
-  sleep.innerHTML = `<strong>Slaap</strong> `;
-  const mk = (txt, fn) => { const b = document.createElement("button"); b.className = "seg-btn"; b.textContent = txt; b.onclick = fn; return b; };
-  const sleepVal = document.createElement("span"); sleepVal.textContent = ` ${log.sleep ?? "–"} u `;
-  sleep.append(mk("–", () => { log.sleep = Math.max(0, (log.sleep ?? 7) - 0.5); saveState(state); renderVandaag(); }), sleepVal, mk("+", () => { log.sleep = (log.sleep ?? 7) + 0.5; saveState(state); renderVandaag(); }));
+  // Slaap — stepper
+  const sleep = $("tracker-sleep");
+  sleep.innerHTML = `<div class="tracker-row"><span class="tracker-label">Slaap</span><div class="stepper"><button class="step-btn" data-act="minus" aria-label="Minder slaap">−</button><span class="step-val">${fmtNum(log.sleep)} u</span><button class="step-btn" data-act="plus" aria-label="Meer slaap">+</button></div></div>`;
+  sleep.querySelector('[data-act="minus"]').onclick = () => { log.sleep = Math.max(0, (log.sleep ?? 7) - 0.5); saveState(state); renderVandaag(); };
+  sleep.querySelector('[data-act="plus"]').onclick = () => { log.sleep = (log.sleep ?? 7) + 0.5; saveState(state); renderVandaag(); };
 
-  const stress = document.getElementById("tracker-stress");
-  stress.innerHTML = `<strong>Stress</strong> `;
+  // Stress — kleurgecodeerde segmenten
+  const stress = $("tracker-stress");
+  let segs = "";
   for (const lvl of ["laag", "mid", "hoog"]) {
-    const b = mk(lvl, () => { log.stress = lvl; saveState(state); renderVandaag(); });
-    if (log.stress === lvl) b.classList.add("active");
-    stress.appendChild(b);
+    segs += `<button class="seg ${lvl}${log.stress === lvl ? " active" : ""}" data-lvl="${lvl}">${STRESS_LABEL[lvl]}</button>`;
+  }
+  stress.innerHTML = `<div class="tracker-col"><span class="tracker-label">Stress</span><div class="segmented segmented--stress">${segs}</div></div>`;
+  for (const b of stress.querySelectorAll(".seg")) {
+    b.onclick = () => { log.stress = b.dataset.lvl; saveState(state); renderVandaag(); };
   }
 }
 
@@ -331,36 +703,43 @@ function renderOverzicht() {
   const s = summarize(state.days);
   const wd = weightDelta(state.weightStart, state.weightEnd);
   const pct = s.totalMeals ? Math.round((s.completedMeals / s.totalMeals) * 100) : 0;
-  const tiles = [
-    { num: s.dryDays, label: "droge dagen" },
-    { num: s.avgSleep ?? "–", label: "gem. slaap (u)" },
-    { num: `${s.completedMeals}/${s.totalMeals}`, label: "maaltijden", bar: pct },
-    { num: `${s.stress.laag}/${s.stress.mid}/${s.stress.hoog}`, label: "stress L/M/H" },
-    { num: wd === null ? "–" : `${wd > 0 ? "+" : ""}${wd}`, label: "gewicht (kg)" },
-  ];
-  document.getElementById("summary-tiles").innerHTML = tiles.map((t) =>
-    `<div class="tile"><div class="num">${t.num}</div><div>${t.label}</div>${
-      t.bar !== undefined ? `<div class="bar"><span style="width:${t.bar}%"></span></div>` : ""
-    }</div>`
-  ).join("");
+
+  let wClass = "";
+  let wNum = "–";
+  if (wd !== null) {
+    wNum = (wd > 0 ? "+" : "") + fmtNum(wd);
+    wClass = wd < 0 ? " good" : wd > 0 ? " bad" : "";
+  }
+
+  $("summary-tiles").innerHTML = `
+    <div class="tile wide">
+      <div class="row"><div class="label">Maaltijden voltooid</div><div class="pct">${pct}%</div></div>
+      <div class="num">${s.completedMeals}<span style="font-size:18px;font-weight:600;color:var(--muted)"> / ${s.totalMeals}</span></div>
+      <div class="bar"><span style="width:${pct}%"></span></div>
+    </div>
+    <div class="tile"><div class="num">${s.dryDays}</div><div class="label">droge dagen</div></div>
+    <div class="tile"><div class="num">${fmtNum(s.avgSleep)}</div><div class="label">gem. slaap (u)</div></div>
+    <div class="tile${wClass}"><div class="num">${wNum}</div><div class="label">gewicht (kg)</div></div>
+    <div class="tile"><div class="num">${s.stress.laag}·${s.stress.mid}·${s.stress.hoog}</div><div class="label">stress L·M·H</div></div>
+  `;
 }
 
 for (const b of document.querySelectorAll("#tabbar button")) b.onclick = () => show(b.dataset.screen);
 renderVandaag();
 show("vandaag");
 
-const startInput = document.getElementById("start-date");
+const startInput = $("start-date");
 startInput.value = state.startDate || "";
 startInput.onchange = () => { state.startDate = startInput.value || null; saveState(state); renderVandaag(); };
 
-const wStart = document.getElementById("weight-start");
-const wEnd = document.getElementById("weight-end");
+const wStart = $("weight-start");
+const wEnd = $("weight-end");
 wStart.value = state.weightStart ?? "";
 wEnd.value = state.weightEnd ?? "";
 wStart.onchange = () => { state.weightStart = wStart.value ? Number(wStart.value) : null; saveState(state); };
 wEnd.onchange = () => { state.weightEnd = wEnd.value ? Number(wEnd.value) : null; saveState(state); };
 
-document.getElementById("reset-btn").onclick = () => {
+$("reset-btn").onclick = () => {
   if (confirm("Weet je zeker dat je het hele logboek wist?")) { resetState(); location.reload(); }
 };
 

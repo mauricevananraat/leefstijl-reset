@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
   <title>Leefstijl Reset</title>
   <meta name="theme-color" content="#2563eb" />
   <link rel="manifest" href="manifest.webmanifest" />
@@ -11,36 +11,72 @@
 <body>
   <main id="app">
     <section id="screen-vandaag" class="screen">
-      <header class="day-header"><h1 id="day-title">Vandaag</h1><p id="day-date"></p></header>
-      <button id="variant-btn" class="big-btn">Rustige dag</button>
-      <ul id="meal-list" class="checklist"></ul>
-      <div class="trackers">
-        <div class="tracker" id="tracker-droog"></div>
-        <div class="tracker" id="tracker-sleep"></div>
-        <div class="tracker" id="tracker-stress"></div>
+      <header class="hero" id="day-hero">
+        <span class="hero-week" id="day-week">Week 1</span>
+        <h1 class="hero-title" id="day-title">Vandaag</h1>
+        <p class="hero-date" id="day-date"></p>
+        <div class="hero-progress" id="day-progress-wrap"><div class="hero-progress-fill" id="day-progress"></div></div>
+        <p class="hero-progress-label" id="day-progress-label"></p>
+      </header>
+
+      <div class="field" id="field-variant">
+        <span class="field-label">Type dag</span>
+        <div class="segmented no-select" id="variant-control"></div>
       </div>
-      <section class="basisregels"><h2>Basisregels</h2><ul id="rules-list"></ul></section>
+
+      <div class="field" id="field-meals">
+        <span class="field-label">Maaltijden</span>
+        <ul id="meal-list" class="meal-list"></ul>
+      </div>
+
+      <div class="field" id="field-trackers">
+        <span class="field-label">Bijhouden</span>
+        <div class="trackers">
+          <div class="tracker" id="tracker-droog"></div>
+          <div class="tracker" id="tracker-sleep"></div>
+          <div class="tracker" id="tracker-stress"></div>
+        </div>
+      </div>
+
+      <section class="card basisregels" id="field-rules">
+        <h2>Basisregels</h2>
+        <ul id="rules-list"></ul>
+      </section>
     </section>
 
     <section id="screen-overzicht" class="screen hidden">
-      <h1>Overzicht</h1>
+      <header class="screen-head"><h1>Overzicht</h1><p class="screen-sub">Je cijfers tot nu toe</p></header>
       <div id="summary-tiles" class="tiles"></div>
     </section>
 
     <section id="screen-instellingen" class="screen hidden">
-      <h1>Instellingen</h1>
-      <label>Startdatum <input type="date" id="start-date" /></label>
-      <label>Gewicht start (kg) <input type="number" step="0.1" id="weight-start" /></label>
-      <label>Gewicht eind (kg) <input type="number" step="0.1" id="weight-end" /></label>
-      <button id="reset-btn" class="danger-btn">Logboek resetten</button>
-      <p class="disclaimer">Dit is geen medisch advies. Voel je je futloos of duizelig op een werkdag? Neem dan een echte maaltijd in plaats van een shake.</p>
+      <header class="screen-head"><h1>Instellingen</h1></header>
+      <div class="card form">
+        <label class="field2">Startdatum<input type="date" id="start-date" /></label>
+        <label class="field2">Gewicht start (kg)<input type="number" step="0.1" inputmode="decimal" id="weight-start" /></label>
+        <label class="field2">Gewicht eind (kg)<input type="number" step="0.1" inputmode="decimal" id="weight-end" /></label>
+      </div>
+      <button id="reset-btn" class="btn-danger">Logboek resetten</button>
+      <div class="disclaimer-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <p>Dit is geen medisch advies. Voel je je futloos of duizelig op een werkdag? Neem dan een echte maaltijd in plaats van een shake.</p>
+      </div>
     </section>
   </main>
 
   <nav id="tabbar">
-    <button data-screen="vandaag" class="active">Vandaag</button>
-    <button data-screen="overzicht">Overzicht</button>
-    <button data-screen="instellingen">Meer</button>
+    <button data-screen="vandaag" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></svg>
+      <span>Vandaag</span>
+    </button>
+    <button data-screen="overzicht">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg>
+      <span>Overzicht</span>
+    </button>
+    <button data-screen="instellingen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="8" x2="20" y2="8"/><circle cx="9" cy="8" r="2.5" fill="#fff"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="15" cy="16" r="2.5" fill="#fff"/></svg>
+      <span>Meer</span>
+    </button>
   </nav>
 
   <script type="module" src="src/app.js"></script>
