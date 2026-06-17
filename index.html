@@ -270,6 +270,17 @@ function renderVandaag() {
     return;
   }
   const p = computeProgress(state.startDate, todayISO);
+  if (p.afterPlan) {
+    titleEl.textContent = "Plan afgerond";
+    dateEl.textContent = "Je 14 dagen zitten erop — bekijk je overzicht.";
+    document.getElementById("meal-list").innerHTML = "";
+    document.getElementById("rules-list").innerHTML = "";
+    document.getElementById("tracker-droog").innerHTML = "";
+    document.getElementById("tracker-sleep").innerHTML = "";
+    document.getElementById("tracker-stress").innerHTML = "";
+    document.getElementById("variant-btn").textContent = "";
+    return;
+  }
   titleEl.textContent = p.beforeStart ? "Plan start binnenkort" : `Dag ${p.dayNumber} · Week ${p.week}`;
   dateEl.textContent = new Date(todayISO).toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" });
 
