@@ -33,7 +33,10 @@ Output: `dist/index.html` + `dist/manifest.webmanifest`
 
 ## Hosting
 
-Live URL: <nog in te vullen>
+Live URL: https://mauricevananraat.github.io/leefstijl-reset/
+
+Gehost via GitHub Pages (branch `gh-pages`, root = de gebouwde `dist/`).
+Bijwerken na een wijziging: `node build.mjs` en daarna `git subtree push --prefix dist origin gh-pages`.
 
 ### Op telefoon als beginscherm-icoon installeren
 
