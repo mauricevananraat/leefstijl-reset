@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>Leefstijl Reset</title>
+  <style>
+:root {
+  --bg: #f6f7f9; --card: #ffffff; --ink: #1f2933; --muted: #525e6b;
+  --accent: #2563eb; --ok: #16a34a; --danger: #dc2626; --tap: 56px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; font-family: system-ui, sans-serif; color: var(--ink);
+  background: var(--bg); padding-bottom: 72px; font-size: 17px;
+}
+.screen { padding: 16px; }
+.hidden { display: none; }
+.day-header h1 { margin: 0; font-size: 22px; }
+.day-header p { margin: 2px 0 16px; color: var(--muted); }
+.big-btn {
+  width: 100%; min-height: var(--tap); font-size: 18px; border: none;
+  border-radius: 14px; background: var(--accent); color: #fff; margin-bottom: 16px;
+}
+.checklist { list-style: none; padding: 0; margin: 0 0 16px; }
+.checklist li {
+  min-height: var(--tap); display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; background: var(--card); border-radius: 14px; margin-bottom: 8px;
+}
+.checklist li.done { background: #e7f6ec; }
+.trackers { display: grid; gap: 8px; margin-bottom: 16px; }
+.tracker { background: var(--card); border-radius: 14px; padding: 12px 16px; }
+.tracker .seg-btn { min-height: 44px; min-width: 64px; border-radius: 10px; border: 1px solid #d1d5db; background: #fff; }
+.tracker .seg-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.basisregels { background: var(--card); border-radius: 14px; padding: 12px 16px; }
+.tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tile { background: var(--card); border-radius: 14px; padding: 14px; }
+.tile .num { font-size: 24px; font-weight: 700; }
+.tile .bar { height: 8px; background: #e5e7eb; border-radius: 4px; margin-top: 8px; }
+.tile .bar > span { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+label { display: block; margin: 12px 0; }
+input { min-height: var(--tap); width: 100%; font-size: 17px; padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 12px; }
+.danger-btn { width: 100%; min-height: var(--tap); border: none; border-radius: 14px; background: var(--danger); color: #fff; margin-top: 16px; }
+.disclaimer { color: var(--muted); font-size: 14px; margin-top: 16px; }
+#tabbar {
+  position: fixed; bottom: 0; left: 0; right: 0; display: flex;
+  background: #fff; border-top: 1px solid #e5e7eb;
+}
+#tabbar button { flex: 1; min-height: 64px; border: none; background: none; font-size: 15px; color: var(--muted); }
+#tabbar button.active { color: var(--accent); font-weight: 600; }
+
+</style>
+</head>
+<body>
+  <main id="app">
+    <section id="screen-vandaag" class="screen">
+      <header class="day-header"><h1 id="day-title">Vandaag</h1><p id="day-date"></p></header>
+      <button id="variant-btn" class="big-btn">Rustige dag</button>
+      <ul id="meal-list" class="checklist"></ul>
+      <div class="trackers">
+        <div class="tracker" id="tracker-droog"></div>
+        <div class="tracker" id="tracker-sleep"></div>
+        <div class="tracker" id="tracker-stress"></div>
+      </div>
+      <section class="basisregels"><h2>Basisregels</h2><ul id="rules-list"></ul></section>
+    </section>
+
+    <section id="screen-overzicht" class="screen hidden">
+      <h1>Overzicht</h1>
+      <div id="summary-tiles" class="tiles"></div>
+    </section>
+
+    <section id="screen-instellingen" class="screen hidden">
+      <h1>Instellingen</h1>
+      <label>Startdatum <input type="date" id="start-date" /></label>
+      <label>Gewicht start (kg) <input type="number" step="0.1" id="weight-start" /></label>
+      <label>Gewicht eind (kg) <input type="number" step="0.1" id="weight-end" /></label>
+      <button id="reset-btn" class="danger-btn">Logboek resetten</button>
+      <p class="disclaimer">Dit is geen medisch advies. Voel je je futloos of duizelig op een werkdag? Neem dan een echte maaltijd in plaats van een shake.</p>
+    </section>
+  </main>
+
+  <nav id="tabbar">
+    <button data-screen="vandaag" class="active">Vandaag</button>
+    <button data-screen="overzicht">Overzicht</button>
+    <button data-screen="instellingen">Meer</button>
+  </nav>
+
+  <script>
+
+// --- logic.js ---
+// src/logic.js
+function ping() {
+  return "pong";
+}
+
+function toUTC(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return Date.UTC(y, m - 1, d);
+}
+
+function daysBetween(startISO, todayISO) {
+  const ms = toUTC(todayISO) - toUTC(startISO);
+  return Math.round(ms / 86400000);
+}
+
+function computeProgress(startISO, todayISO) {
+  const diff = daysBetween(startISO, todayISO);
+  const dayNumber = diff + 1;
+  return {
+    dayNumber,
+    week: dayNumber <= 7 ? 1 : 2,
+    beforeStart: diff < 0,
+    afterPlan: dayNumber > 14,
+  };
+}
+
+function isWeekday(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  const dow = new Date(Date.UTC(y, m - 1, d)).getUTCDay(); // 0=zo..6=za
+  return dow >= 1 && dow <= 5;
+}
+
+function defaultDroog(iso) {
+  return isWeekday(iso);
+}
+
+function emptyDayLog(iso) {
+  return {
+    variant: "rustig",
+    meals: { ontbijt: false, lunch: false, avond: false },
+    droog: defaultDroog(iso),
+    sleep: null,
+    stress: null,
+  };
+}
+
+function summarize(daysObj) {
+  const logs = Object.values(daysObj || {});
+  let dryDays = 0, completedMeals = 0, totalMeals = 0;
+  const sleeps = [];
+  const stress = { laag: 0, mid: 0, hoog: 0 };
+  for (const log of logs) {
+    if (log.droog) dryDays++;
+    const meals = log.meals || {};
+    for (const key of ["ontbijt", "lunch", "avond"]) {
+      totalMeals++;
+      if (meals[key]) completedMeals++;
+    }
+    if (typeof log.sleep === "number") sleeps.push(log.sleep);
+    if (log.stress && stress[log.stress] !== undefined) stress[log.stress]++;
+  }
+  const avgSleep = sleeps.length
+    ? Math.round((sleeps.reduce((a, b) => a + b, 0) / sleeps.length) * 10) / 10
+    : null;
+  return { dryDays, avgSleep, completedMeals, totalMeals, stress };
+}
+
+function weightDelta(start, end) {
+  if (typeof start !== "number" || typeof end !== "number") return null;
+  return Math.round((end - start) * 10) / 10;
+}
+
+
+// --- content.js ---
+// CONCEPT-invulling op basis van de spec-principes. Door Maurice te bevestigen.
+const BASISREGELS = [
+  "Eiwit bij elke maaltijd",
+  "Veel water drinken",
+  "Koffie spreiden (maagzuur)",
+  "Doordeweeks geen alcohol",
+  "Niet zwaar eten vlak voor slapen",
+  "Slaap 6,5–7u heeft prioriteit",
+  "Beweging week 1: rustig wandelen",
+];
+
+const MEALS = {
+  1: {
+    zwaar: {
+      ontbijt: "Eiwitshake",
+      lunch: "Eiwitshake",
+      avond: "Eiwitrijk avondmaal met zetmeel (bijv. rijst/aardappel) + groente",
+    },
+    rustig: {
+      ontbijt: "Eiwitshake",
+      lunch: "Eiwitshake",
+      avond: "Eiwitrijk avondmaal, weinig/geen zetmeel + groente",
+    },
+  },
+  2: {
+    zwaar: {
+      ontbijt: "Kwark met fruit",
+      lunch: "Eiwit + groente, met wat zetmeel",
+      avond: "Vlees/vis + groente + zetmeel",
+    },
+    rustig: {
+      ontbijt: "Kwark met fruit",
+      lunch: "Eiwit + groente",
+      avond: "Vlees/vis + groente, weinig/geen zetmeel",
+    },
+  },
+};
+
+function getMeals(week, variant) {
+  return MEALS[week][variant];
+}
+
+
+// --- storage.js ---
+// src/storage.js
+
+const KEY = "leefstijl-reset:v1";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {
+    console.error("Kon opslag niet lezen:", e);
+  }
+  return { startDate: null, weightStart: null, weightEnd: null, days: {} };
+}
+
+function saveState(state) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(state));
+  } catch (e) {
+    console.error("Kon opslag niet schrijven:", e);
+  }
+}
+
+function resetState() {
+  try {
+    localStorage.removeItem(KEY);
+  } catch (e) {
+    console.error("Kon opslag niet wissen:", e);
+  }
+}
+
+function getDayLog(state, iso) {
+  if (!state.days[iso]) state.days[iso] = emptyDayLog(iso);
+  return state.days[iso];
+}
+
+
+// --- app.js ---
+// src/app.js
+
+
+
+const state = loadState();
+const todayISO = new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD lokaal
+
+function show(screen) {
+  for (const s of document.querySelectorAll(".screen")) s.classList.add("hidden");
+  document.getElementById("screen-" + screen).classList.remove("hidden");
+  for (const b of document.querySelectorAll("#tabbar button")) b.classList.toggle("active", b.dataset.screen === screen);
+  if (screen === "overzicht") renderOverzicht();
+}
+
+function renderVandaag() {
+  const dateEl = document.getElementById("day-date");
+  const titleEl = document.getElementById("day-title");
+  if (!state.startDate) {
+    titleEl.textContent = "Welkom";
+    dateEl.textContent = "Stel je startdatum in bij 'Meer'.";
+    document.getElementById("meal-list").innerHTML = "";
+    return;
+  }
+  const p = computeProgress(state.startDate, todayISO);
+  titleEl.textContent = p.beforeStart ? "Plan start binnenkort" : `Dag ${p.dayNumber} · Week ${p.week}`;
+  dateEl.textContent = new Date(todayISO).toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" });
+
+  const log = getDayLog(state, todayISO);
+  const variantBtn = document.getElementById("variant-btn");
+  variantBtn.textContent = log.variant === "zwaar" ? "Zware dag" : "Rustige dag";
+  variantBtn.onclick = () => { log.variant = log.variant === "zwaar" ? "rustig" : "zwaar"; saveState(state); renderVandaag(); };
+
+  const week = p.beforeStart ? 1 : p.week;
+  const meals = getMeals(week, log.variant);
+  const list = document.getElementById("meal-list");
+  list.innerHTML = "";
+  for (const key of ["ontbijt", "lunch", "avond"]) {
+    const li = document.createElement("li");
+    if (log.meals[key]) li.classList.add("done");
+    li.innerHTML = `<span>${log.meals[key] ? "✓" : "○"}</span><div><strong>${key}</strong><br/>${meals[key]}</div>`;
+    li.onclick = () => { log.meals[key] = !log.meals[key]; saveState(state); renderVandaag(); };
+    list.appendChild(li);
+  }
+
+  const rules = document.getElementById("rules-list");
+  rules.innerHTML = BASISREGELS.map((r) => `<li>${r}</li>`).join("");
+
+  const droog = document.getElementById("tracker-droog");
+  droog.innerHTML = `<strong>Droge dag</strong> `;
+  const droogBtn = document.createElement("button");
+  droogBtn.className = "seg-btn" + (log.droog ? " active" : "");
+  droogBtn.textContent = log.droog ? "Droog ✓" : "Niet droog";
+  droogBtn.onclick = () => { log.droog = !log.droog; saveState(state); renderVandaag(); };
+  droog.appendChild(droogBtn);
+
+  const sleep = document.getElementById("tracker-sleep");
+  sleep.innerHTML = `<strong>Slaap</strong> `;
+  const mk = (txt, fn) => { const b = document.createElement("button"); b.className = "seg-btn"; b.textContent = txt; b.onclick = fn; return b; };
+  const sleepVal = document.createElement("span"); sleepVal.textContent = ` ${log.sleep ?? "–"} u `;
+  sleep.append(mk("–", () => { log.sleep = Math.max(0, (log.sleep ?? 7) - 0.5); saveState(state); renderVandaag(); }), sleepVal, mk("+", () => { log.sleep = (log.sleep ?? 7) + 0.5; saveState(state); renderVandaag(); }));
+
+  const stress = document.getElementById("tracker-stress");
+  stress.innerHTML = `<strong>Stress</strong> `;
+  for (const lvl of ["laag", "mid", "hoog"]) {
+    const b = mk(lvl, () => { log.stress = lvl; saveState(state); renderVandaag(); });
+    if (log.stress === lvl) b.classList.add("active");
+    stress.appendChild(b);
+  }
+}
+
+function renderOverzicht() {
+  const s = summarize(state.days);
+  const wd = weightDelta(state.weightStart, state.weightEnd);
+  const pct = s.totalMeals ? Math.round((s.completedMeals / s.totalMeals) * 100) : 0;
+  const tiles = [
+    { num: s.dryDays, label: "droge dagen" },
+    { num: s.avgSleep ?? "–", label: "gem. slaap (u)" },
+    { num: `${s.completedMeals}/${s.totalMeals}`, label: "maaltijden", bar: pct },
+    { num: `${s.stress.laag}/${s.stress.mid}/${s.stress.hoog}`, label: "stress L/M/H" },
+    { num: wd === null ? "–" : `${wd > 0 ? "+" : ""}${wd}`, label: "gewicht (kg)" },
+  ];
+  document.getElementById("summary-tiles").innerHTML = tiles.map((t) =>
+    `<div class="tile"><div class="num">${t.num}</div><div>${t.label}</div>${
+      t.bar !== undefined ? `<div class="bar"><span style="width:${t.bar}%"></span></div>` : ""
+    }</div>`
+  ).join("");
+}
+
+for (const b of document.querySelectorAll("#tabbar button")) b.onclick = () => show(b.dataset.screen);
+renderVandaag();
+show("vandaag");
+
+const startInput = document.getElementById("start-date");
+startInput.value = state.startDate || "";
+startInput.onchange = () => { state.startDate = startInput.value || null; saveState(state); renderVandaag(); };
+
+const wStart = document.getElementById("weight-start");
+const wEnd = document.getElementById("weight-end");
+wStart.value = state.weightStart ?? "";
+wEnd.value = state.weightEnd ?? "";
+wStart.onchange = () => { state.weightStart = wStart.value ? Number(wStart.value) : null; saveState(state); };
+wEnd.onchange = () => { state.weightEnd = wEnd.value ? Number(wEnd.value) : null; saveState(state); };
+
+document.getElementById("reset-btn").onclick = () => {
+  if (confirm("Weet je zeker dat je het hele logboek wist?")) { resetState(); location.reload(); }
+};
+
+
+</script>
+</body>
+</html>
