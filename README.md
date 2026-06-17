@@ -41,3 +41,5 @@ Live URL: <nog in te vullen>
 2. Tik op het deelmenu (iOS) of de drie puntjes (Android)
 3. Kies "Toevoegen aan beginscherm" / "Add to Home Screen"
 4. De app start voortaan in standalone-modus (zonder browserbalk)
+
+**Opmerking over het icoon:** "Toevoegen aan beginscherm" werkt direct. De telefoon toont dan een standaard/generiek icoon. Een eigen app-icoon is optioneel en nog niet toegevoegd — `manifest.webmanifest` → `icons` is bewust leeg gelaten.

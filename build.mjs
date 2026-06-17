@@ -1,5 +1,5 @@
 // build.mjs — inlinet CSS en JS-modules in één bestand
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, copyFileSync } from "node:fs";
 
 const css = readFileSync("src/styles.css", "utf8");
 // Modules in afhankelijkheidsvolgorde; strip import/export voor inline-bundel
@@ -17,3 +17,4 @@ html = html.replace(/<script type="module"[^>]*><\/script>/, `<script>\n${js}\n<
 mkdirSync("dist", { recursive: true });
 writeFileSync("dist/index.html", html);
 console.log("dist/index.html gebouwd:", html.length, "tekens");
+copyFileSync("manifest.webmanifest", "dist/manifest.webmanifest");

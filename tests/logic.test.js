@@ -95,6 +95,15 @@ describe("summarize", () => {
     const empty = { "2026-06-17": { meals: {}, sleep: null, stress: null, droog: false } };
     expect(summarize(empty).avgSleep).toBe(null);
   });
+  it("geeft leeg overzicht bij lege log ({})", () => {
+    expect(summarize({})).toEqual({ dryDays: 0, avgSleep: null, completedMeals: 0, totalMeals: 0, stress: { laag: 0, mid: 0, hoog: 0 } });
+  });
+  it("verwerkt een dag zonder meals-object veilig", () => {
+    const log = { "2026-06-17": { droog: false, sleep: null, stress: null } };
+    const s = summarize(log);
+    expect(s.totalMeals).toBe(3);
+    expect(s.completedMeals).toBe(0);
+  });
 });
 
 describe("weightDelta", () => {
